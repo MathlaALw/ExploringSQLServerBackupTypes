@@ -70,3 +70,43 @@ INSERT INTO Students VALUES
 **Students Table**
 
 ![Students Table](./image/TrainingDB_StudentTable.png)
+
+--------
+## Step 3: Perform Backup Operations
+**1. Full Backup**
+```sql
+BACKUP DATABASE TrainingDB TO DISK = 'C:\Backups\TrainingDB_Full.bak';
+```
+![TrainingDB Full Backup](./image/FullBackup.png)
+
+**2. Insert New Record (simulate data change)**
+```sql
+INSERT INTO Students VALUES (3, 'Fatma Said', '2024-01-10');
+```
+![Insert New Record](./image/InsertNewRecord.png)
+
+**3. Differential Backup**
+```sql
+BACKUP DATABASE TrainingDB TO DISK = 'C:\Backups\TrainingDB_Diff.bak' WITH DIFFERENTIAL;
+```
+![TrainingDB Differential Backup](./image/DifferentialBackup.png)
+
+**4. Transaction Log Backup**
+```sql
+-- First make sure Recovery Model is FULL
+ALTER DATABASE TrainingDB SET RECOVERY FULL;
+-- Now backup the log
+BACKUP LOG TrainingDB TO DISK = 'C:\Backups\TrainingDB_Log.trn';
+```
+
+![TrainingDB Transaction Log Backup](./image/TransactionLogBackup.png)
+
+
+**5. Copy-Only Backup**
+```sql
+BACKUP DATABASE TrainingDB TO DISK = 'C:\Backups\TrainingDB_CopyOnly.bak' WITH
+COPY_ONLY;
+
+```
+
+![TrainingDB Copy-Only Backup](./image/CopyOnlyBackup.png)
