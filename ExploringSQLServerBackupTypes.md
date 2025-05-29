@@ -320,3 +320,15 @@ there.
 
 ![Verify Restored Data](./image/VerifyRestoredData.png)
 
+---
+**Reflection Questions:** 
+1. What would happen if you skipped the differential backup step? 
+- If you skip the differential backup step, you would only restore the database to the state of the last full backup. Any changes made after that full backup and before the differential backup would be lost, resulting in potential data loss.
+2. What’s the difference between restoring a full vs. copy-only backup? 
+- A full backup restores the entire database and is part of the regular backup chain, affecting the sequence of subsequent backups. A copy-only backup, however, does not affect the backup chain and is used for ad-hoc backups without disrupting the regular backup process. It allows you to take a snapshot of the database without altering the existing backup sequence.
+3. What happens if you use WITH RECOVERY in the middle of a restore chain? 
+- Using WITH RECOVERY in the middle of a restore chain will finalize the restore process, making the database available for use. However, it will prevent any further restores (like differential or transaction log backups) from being applied. This means you cannot continue restoring additional backups after using WITH RECOVERY, which could lead to incomplete recovery if there are more backups to apply.
+4. Which backup types are optional and which are mandatory for full recovery?
+- Full backups and transaction log backups are mandatory for full recovery. Differential backups are optional but recommended for faster recovery. Copy-only backups are also optional and used for specific scenarios without affecting the backup chain. File/filegroup backups are optional and used for selective backup of large databases.
+
+
