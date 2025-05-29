@@ -227,7 +227,7 @@ VALUES
 **FULL BACKUP - Run Every Sunday at 12:00 AM**
 ```sql
 BACKUP DATABASE HospitalDB
-TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Full_20250525_0000.bak'
+TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Backups\Full\HospitalDB_Full_$(ESCAPE_NONE(WEEKDAY))_$(ESCAPE_NONE(DATE))_0000.bak'
 WITH FORMAT, INIT, NAME = 'Full Backup of HospitalDB';
 ```
 ![FULL BACKUP - Run Every Sunday at 12:00 AM](./image/FULLBACKUP-RunEverySundayat12AM.png)
@@ -235,7 +235,7 @@ WITH FORMAT, INIT, NAME = 'Full Backup of HospitalDB';
 **DIFFERENTIAL BACKUP - Run Monday to Saturday at 12:00 AM**
 ```sql
 BACKUP DATABASE HospitalDB
-TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Diff_20250529_0000.bak'
+TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Backups\Differential\HospitalDB_Diff_$(ESCAPE_NONE(WEEKDAY))_$(ESCAPE_NONE(DATE))_0000.bak'
 WITH DIFFERENTIAL, INIT, NAME = 'Differential Backup of HospitalDB';
 ```
 ![DIFFERENTIAL BACKUP - Run Monday to Saturday at 12:00 AM](./image/DIFFERENTIALBACKUP-RunMondaytoSaturdayat12AM.png)
@@ -244,13 +244,62 @@ WITH DIFFERENTIAL, INIT, NAME = 'Differential Backup of HospitalDB';
 
 ```sql
 BACKUP LOG HospitalDB
-TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Log_20250529_1300.trn'
+TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Backups\Logs\HospitalDB_Log_$(ESCAPE_NONE(DATE))_$(ESCAPE_NONE(TIME)).trn'
 WITH INIT, NAME = 'Transaction Log Backup of HospitalDB';
-
-
 ```
 ![TRANSACTION LOG BACKUP - Run Every Hour](./image/TRANSACTIONLOGBACKUP-RunEveryHour.png)
 
 
 ---------
+
+## Follow-Up Task: Restore the Database from Your Backup Files
+
+**Scenario:**
+
+Emergency Recovery Simulation for TrainingDB
+
+Today, you practiced backing up your database TrainingDB using different types of backups: 
+- Full Backup 
+- Differential Backup 
+- Transaction Log Backup 
+- Copy-Only Backup 
+
+**Now simulate this real-world problem:**
+
+This afternoon, the TrainingDB system crashed. Your manager asks you to **recover the 
+database up to the last transaction log backup** you made. Your goal is to bring the database 
+back to the most recent state — using your backup files only.
+
+**Instructions:**
+
+**Step 1: Drop the Current Database (Simulate System Failure)**
+```sql
+DROP DATABASE TrainingDB;
+
+```
+
+**Step 2: Restore from Your Backups**
+Use the **same file names and paths** you used earlier. Replace them accordingly. 
+
+**1. Restore FULL backup**
+```sql
+RESTORE DATABASE TrainingDB  
+FROM DISK = 'C:\Backups\TrainingDB_Full.bak' 
+WITH NORECOVERY; 
+ ```
+**2. Restore DIFFERENTIAL backup (if you created one)**
+```sql 
+RESTORE DATABASE TrainingDB  
+FROM DISK = 'C:\Backups\TrainingDB_Diff.bak' 
+WITH NORECOVERY; 
+ ```
+
+**3. Restore TRANSACTION LOG backup (if you created one)**
+```sql
+RESTORE LOG TrainingDB  
+FROM DISK = 'C:\Backups\TrainingDB_Log.trn' 
+WITH RECOVERY; 
+     Use WITH NORECOVERY until the final step. 
+     Use WITH RECOVERY only at the last step. 
+```
 
