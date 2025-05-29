@@ -306,3 +306,17 @@ WITH RECOVERY;
 
 - Use WITH NORECOVERY until the final step. 
 - Use WITH RECOVERY only at the last step.
+
+---
+**Step 3: Verify the Restored Data**
+```sql
+
+USE TrainingDB; 
+SELECT * FROM Students; 
+```
+
+Check if all the records (including the last one you added before the transaction log backup) are 
+there.
+
+![Verify Restored Data](./image/VerifyRestoredData.png)
+
