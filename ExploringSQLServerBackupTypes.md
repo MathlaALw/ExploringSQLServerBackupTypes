@@ -284,22 +284,25 @@ Use the **same file names and paths** you used earlier. Replace them accordingly
 **1. Restore FULL backup**
 ```sql
 RESTORE DATABASE TrainingDB  
-FROM DISK = 'C:\Backups\TrainingDB_Full.bak' 
+FROM DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\TrainingDB_Full.bak' 
 WITH NORECOVERY; 
  ```
+![TrainingDB Restore Full Backup](./image/RestoreTrainingDB.png)
+
 **2. Restore DIFFERENTIAL backup (if you created one)**
 ```sql 
 RESTORE DATABASE TrainingDB  
-FROM DISK = 'C:\Backups\TrainingDB_Diff.bak' 
+FROM DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\TrainingDB_Diff.bak' 
 WITH NORECOVERY; 
  ```
 
 **3. Restore TRANSACTION LOG backup (if you created one)**
 ```sql
 RESTORE LOG TrainingDB  
-FROM DISK = 'C:\Backups\TrainingDB_Log.trn' 
+FROM DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\TrainingDB_Log.trn' 
 WITH RECOVERY; 
-     Use WITH NORECOVERY until the final step. 
-     Use WITH RECOVERY only at the last step. 
+    
 ```
 
+- Use WITH NORECOVERY until the final step. 
+- Use WITH RECOVERY only at the last step.
