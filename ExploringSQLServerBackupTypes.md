@@ -110,3 +110,147 @@ COPY_ONLY;
 ```
 
 ![TrainingDB Copy-Only Backup](./image/CopyOnlyBackup.png)
+
+
+---------------------
+
+## Part 4: Real-World Scenario Simulation
+**Scenario:**
+You are a database admin for a hospital system.
+On Sunday you take a full backup. Each night, you take a differential backup. Every hour, you
+back up the transaction log.
+
+**Challenge Task:**
+Design a backup schedule for this hospital system using SQL scripts. Assume the database is
+called HospitalDB. 
+
+**Include:**
+
+• Backup frequency
+
+• Type of backup for each day/time
+
+• Folder naming and file versioning convention
+
+**Deliverable:** 
+A .sql file or script plan + brief description of the strategy
+
+### Backup for HospitalDB
+
+```sql
+-- Create HospitalDB
+
+CREATE DATABASE HospitalDB;
+   
+
+USE HospitalDB;
+
+
+-- Create Departments table
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY IDENTITY(1,1),
+    DepartmentName NVARCHAR(100) NOT NULL
+);
+
+-- Create Doctors table
+CREATE TABLE Doctors (
+    DoctorID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    DepartmentID INT,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+);
+
+
+-- Create Patients table
+CREATE TABLE Patients (
+    PatientID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    DateOfBirth DATE,
+    Gender NVARCHAR(10)
+);
+
+
+-- Create Appointments table
+CREATE TABLE Appointments (
+    AppointmentID INT PRIMARY KEY IDENTITY(1,1),
+    PatientID INT,
+    DoctorID INT,
+    AppointmentDate DATETIME,
+    Reason NVARCHAR(255),
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
+);
+
+
+-- Insert sample data into Departments
+INSERT INTO Departments (DepartmentName)
+VALUES 
+('Cardiology'),
+('Neurology'),
+('Pediatrics'),
+('Orthopedics');
+
+
+-- Insert sample data into Doctors
+INSERT INTO Doctors (FirstName, LastName, DepartmentID)
+VALUES
+('Alice', 'Smith', 1),
+('Bob', 'Johnson', 2),
+('Carol', 'Williams', 3),
+('David', 'Brown', 4);
+
+
+-- Insert sample data into Patients
+INSERT INTO Patients (FirstName, LastName, DateOfBirth, Gender)
+VALUES
+('John', 'Doe', '1985-03-15', 'Male'),
+('Jane', 'Doe', '1990-07-22', 'Female'),
+('Emily', 'Clark', '2001-11-30', 'Female'),
+('Michael', 'Lee', '1975-01-05', 'Male');
+
+
+-- Insert sample data into Appointments
+INSERT INTO Appointments (PatientID, DoctorID, AppointmentDate, Reason)
+VALUES
+(1, 1, '2025-06-01 09:00', 'Heart Checkup'),
+(2, 2, '2025-06-01 10:30', 'Migraine'),
+(3, 3, '2025-06-01 11:00', 'Vaccination'),
+(4, 4, '2025-06-01 12:15', 'Back Pain');
+
+
+
+```
+
+
+**FULL BACKUP - Run Every Sunday at 12:00 AM**
+```sql
+BACKUP DATABASE HospitalDB
+TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Full_20250525_0000.bak'
+WITH FORMAT, INIT, NAME = 'Full Backup of HospitalDB';
+```
+![FULL BACKUP - Run Every Sunday at 12:00 AM](./image/FULLBACKUP-RunEverySundayat12AM.png)
+
+**DIFFERENTIAL BACKUP - Run Monday to Saturday at 12:00 AM**
+```sql
+BACKUP DATABASE HospitalDB
+TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Diff_20250529_0000.bak'
+WITH DIFFERENTIAL, INIT, NAME = 'Differential Backup of HospitalDB';
+```
+![DIFFERENTIAL BACKUP - Run Monday to Saturday at 12:00 AM](./image/DIFFERENTIALBACKUP-RunMondaytoSaturdayat12AM.png)
+
+**TRANSACTION LOG BACKUP - Run Every Hour**
+
+```sql
+BACKUP LOG HospitalDB
+TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\HospitalDB_Log_20250529_1300.trn'
+WITH INIT, NAME = 'Transaction Log Backup of HospitalDB';
+
+
+```
+![TRANSACTION LOG BACKUP - Run Every Hour](./image/TRANSACTIONLOGBACKUP-RunEveryHour.png)
+
+
+---------
+
