@@ -106,7 +106,10 @@ WITH RECOVERY;
 -- Use WITH RECOVERY only at the last step. 
 
 
+-- Step 3: Verify the Restored Data
 
+USE TrainingDB; 
+SELECT * FROM Students; 
 
 
 

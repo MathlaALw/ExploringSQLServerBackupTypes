@@ -252,7 +252,7 @@ WITH INIT, NAME = 'Transaction Log Backup of HospitalDB';
 
 ---------
 
-## Follow-Up Task: Restore the Database from Your Backup Files
+## Follow-Up Task: Restore the Database from Backup Files
 
 **Scenario:**
 
